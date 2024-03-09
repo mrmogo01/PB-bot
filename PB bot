@@ -1,0 +1,25 @@
+import vk_api
+import time
+import datetime
+
+vk_session = vk_api.VkApi(token='vk1.a.mjn_HkiyBZ53R94_rUV-rkzuAlA2dqJkctcSiWFbKL6vtz2V_qaE3Xh0-wGhOrkJ4fhhwZqA-tf2KSHd5-mLU7gYs8L-vMwLelvvWA7bazrG7TqjCns_iu7LqmZnwipAQDARsxmk7jp9vRo7Y3qnqFUPx-RRgFIfulOyqjpZY764Gked9HWfbhbwMI_5KM_2LPeKP0KzAfT2Cq8pws77Jw)')
+vk = vk_session.get_api()
+
+weekday_messages = {
+    0: "Дежурные на понедельник...",
+    1: "Дежурные на вторник...",
+    2: "Дежурные на среду...",
+    3: "Дежурные на четверг...",
+    4: "Дежурные на пятницу...",
+    5: "Дежурные на субботу...",
+    6: "Дежурные на воскресенье...",
+}
+
+while True:
+    current_time = datetime.datetime.now()
+    current_day = current_time.weekday()
+    if current_time.hour == 3 and current_time.minute == 54:
+        for chat_id in range(1, 101):  # Предположим, что у вас есть 100 чатов с номерами от 1 до 100
+            vk.messages.send(chat_id=chat_id, message=weekday_messages[current_day], random_id=0)
+            time.sleep(1)  # Ожидание между отправкой сообщений, чтобы избежать блокировки
+        time.sleep(60)  # Ожидание, чтобы избежать множественной отправки одного сообщения

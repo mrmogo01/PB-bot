@@ -2,24 +2,157 @@ import vk_api
 import time
 import datetime
 
-vk_session = vk_api.VkApi(token='vk1.a.mjn_HkiyBZ53R94_rUV-rkzuAlA2dqJkctcSiWFbKL6vtz2V_qaE3Xh0-wGhOrkJ4fhhwZqA-tf2KSHd5-mLU7gYs8L-vMwLelvvWA7bazrG7TqjCns_iu7LqmZnwipAQDARsxmk7jp9vRo7Y3qnqFUPx-RRgFIfulOyqjpZY764Gked9HWfbhbwMI_5KM_2LPeKP0KzAfT2Cq8pws77Jw)')
+vk_session = vk_api.VkApi(token='vk1.a.A1vau7tzc3xegqL5fU5QpR8sfkCI2lL8eri9wYrnhCNrxXbpQz1WRhMsSQTwVw-7MEZKqC6K7P46qDXxHl3h-ycndU5q1nXj16chlqFLlInvhmgKLHeUd7wCvDT6h9wziDWCXLfE5yybYMD63LmSXAQpx5b8wPBlpozDcdrCf6jdyjsvTfUH5hGy-DWAc3M2EFC6hM_zGpsdF_fKw2HSgA')
 vk = vk_session.get_api()
 
-weekday_messages = {
-    0: "Дежурные на понедельник...",
-    1: "Дежурные на вторник...",
-    2: "Дежурные на среду...",
-    3: "Дежурные на четверг...",
-    4: "Дежурные на пятницу...",
-    5: "Дежурные на субботу...",
-    6: "Дежурные на воскресенье...",
+# Список дежурных коворкинга
+duty_schedule = {
+    0: { #Понедельник
+        #"10:00-11:00": ["@aaaaalllooooo(Алена)", "@mrmogo(Андрей)"],
+        #"11:00-12:00": ["@mrmogo(Андрей)", "@valeronabaddon(Дима М)"],
+        #"12:00-13:00": ["@valeronabaddon(Дима М)", "@elmsberry(Эмма)"],
+        #"13:00-14:00": ["@elmsberry(Эмма) (до 13:30)", "@emma_shifter(Настя)", "@lads_mart(Лада)"],
+        #"14:00-15:00": ["@emma_shifter(Настя)", "@lads_mart(Лада)"],
+        #"15:00-16:00": ["@darianokhrinaa(Даша Н)", "@thesleepinglion(Лева)"]
+    },
+    1: { # Вторник
+        "10:00-11:00": ["@lezidey(Кирилл)", "@graziazz(Даша Ф)"],
+        "11:00-12:00": ["@graziazz(Даша Ф)", "@limonadgs(Дима Ю)"],
+        "12:00-13:00": ["@limonadgs(Дима Ю)", "@night.cross(Леша)"],
+        "13:00-14:00": ["@night.cross(Леша)", "@xx_zmary(Маша)"],
+        "14:00-15:00": ["@po_katyusha(Катя)", "@xx_zmary(Маша)"],
+        "15:00-16:00": ["@darianokhrinaa(Даша Н)", "@thesleepinglion(Лева)"]
+    },
+    2: {  # Среда
+        #"10:00-11:00": ["@po_katyusha(Катя)", "@i_am_spacey(Максим К)"],
+        #"11:00-12:00": ["@i_am_spacey(Максим К)", "@febekey(Вера)"],
+        #"12:00-13:00": ["@febekey(Вера)", "@kovtpolly(Поля К)"],
+        #"13:00-14:00": ["@kovtpolly(Поля К)", "@zhivtsov2000(Максим Ж)"],
+        #"14:00-15:00": ["@zhivtsov2000(Максим Ж)", "@dasha_korelina(Даша К)"],
+        #"15:00-16:00": ["@dasha_korelina(Даша К)", "@avepsam(Рома)"]
+    },
+    3: {  # Четверг
+        "10:00-11:00": ["@avepsam(Рома)", "@darybut(Даша Б)"],
+        "11:00-12:00": ["@darybut(Даша Б)", "@zhivtsov2000(Максим Ж)"],
+        "12:00-13:00": ["@lezidey(Кирилл)", "@mrmogo(Андрей)"],
+        "13:00-14:00": ["@aaaaalllooooo(Алена)", "@lads_mart(Лада)"],
+        "14:00-15:00": ["@febekey(Вера)", "@avepsam(Рома)"],
+        "15:00-16:00": ["@apelsinn14(Миша)", "@polinariaa_d(Поля Д)"]
+    },
+    4: {  # Пятница
+        #"10:00-11:00": ["@apelsinn14(Миша)", "@baldejniy_name(Макс П)"],
+        #"11:00-12:00": ["@baldejniy_name(Макс П)", "@ksushasolnyshko(Ксю)"],
+        #"12:00-13:00": ["@ksushasolnyshko(Ксю)", "@darianokhrinaa(Даша Н)"],
+        #"13:00-14:00": ["@aaaaalllooooo(Алена)", "@roggi7(Игорь)"],
+        #"14:00-15:00": ["@roggi7(Игорь)", "@polinariaa_d(Поля Д)"],
+        #"15:00-16:00": ["@polinariaa_d(Поля Д)", "@elmsberry(Эмма)"]
+    }
 }
 
+# График работы коворкинга
+coworking_schedule = {
+    "15-04-2024": {"status": "Закрыт весь день"}, # Понедельник
+    "16-04-2024": {"status": "Открыт весь день"}, # Вторник
+    "17-04-2024": {"status": "Закрыт весь день"}, # Среда
+    "18-04-2024": {"status": "Открыт весь день"}, # Четверг
+    "19-04-2024": {"status": "Закрыт весь день"}  # Пятница
+
+}
+
+# График уборки
+cleaning_schedule = {
+    "12-02-2024": ["@mrmogo(Андрей)", "@zhivtsov2000(Максим Ж)"],
+    "19-02-2024": ["@roggi7(Игорь)", "@apelsinn14(Миша)"],
+    "26-02-2024": ["@avepsam(Рома)", "@baldejniy_name(Макс П)"],
+    "4-03-2024": ["@emma_shifter(Настя)", "@ksushasolnyshko(Ксю)"],
+    "11-03-2024": ["@elmsberry(Эмма)", "@limonadgs(Дима Ю)"],
+    "18-03-2024": ["@xx_zmary(Маша)", "@darianokhrinaa(Даша Н)"],
+    "25-03-2024": ["@po_katyusha(Катя)", "@aaaaalllooooo(Алена)"],
+    "1-04-2024": ["@lezidey(Кирилл)", "@graziazz(Даша Ф)"],
+    "8-04-2024": ["@kovtpolly(Поля К)", "@darybut(Даша Б)"],
+    "15-04-2024": ["@polinariaa_d(Поля Д)", "@i_am_spacey(Максим К)"]
+}
+
+
+
+# Словарь для русских названий дней недели
+russian_weekdays = {
+    0: "Понедельник",
+    1: "Вторник",
+    2: "Среда",
+    3: "Четверг",
+    4: "Пятница",
+    5: "Суббота",
+    6: "Воскресенье"
+}
+
+# Определяем день недели для завтрашней даты
+tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+# Определяем время для отправки сообщения
+
+
+
+# Функция для определения ответственных за уборку на заданную дату
+def get_cleaning_responsibles(date):
+    for key_date in cleaning_schedule:
+        start_date = datetime.datetime.strptime(key_date, "%d-%m-%Y")
+        end_date = start_date + datetime.timedelta(days=6)  # Продолжительность уборки - 7 дней
+        if start_date <= date <= end_date:
+            return cleaning_schedule[key_date]
+    return "Не указано"  # Если на заданную дату нет информации о уборке
+
+
 while True:
-    current_time = datetime.datetime.now()
-    current_day = current_time.weekday()
-    if current_time.hour == 3 and current_time.minute == 54:
-        for chat_id in range(1, 101):  # Предположим, что у вас есть 100 чатов с номерами от 1 до 100
-            vk.messages.send(chat_id=chat_id, message=weekday_messages[current_day], random_id=0)
-            time.sleep(1)  # Ожидание между отправкой сообщений, чтобы избежать блокировки
+    now = datetime.datetime.now()
+
+    # Определяем день недели для завтрашней даты
+    tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+    tomorrow_day = tomorrow.weekday()
+
+    # Проверяем, достигнуто ли нужное время для отправки сообщения
+    if datetime.time(21, 11) < now.time() and now.time() < datetime.time(21, 12):
+        # Проверяем, что сегодня не суббота или воскресенье
+        if tomorrow_day not in [5, 6]:
+            message = f"Дата: {tomorrow.strftime('%d-%m-%Y')}\n"
+            message += f"День недели: {russian_weekdays[tomorrow_day]}\n"
+            if tomorrow.strftime('%d-%m-%Y') in coworking_schedule:
+                coworking_info = coworking_schedule[tomorrow.strftime('%d-%m-%Y')]
+                if 'status' in coworking_info:
+                    message += f"Состояние коворкинга: {coworking_info['status']}\n\n"
+                else:
+                    message += "Состояние коворкинга: Не указано\n"
+                if 'time' in coworking_info:
+                    message += f"Время коворкинга: {coworking_info['time']}\n"
+            else:
+                message += "Состояние коворкинга: Не указано\n"
+
+            # Если коворкинг закрыт весь день, выводим только информацию о людях по уборке
+            if tomorrow.strftime('%d-%m-%Y') in coworking_schedule and \
+                    coworking_schedule[tomorrow.strftime('%d-%m-%Y')]["status"] == "Закрыт весь день":
+                message += f"\n🧹 Ответственные за уборку на эту неделю: {', '.join(get_cleaning_responsibles(tomorrow))}\n"
+            else:
+                if tomorrow_day in duty_schedule:
+                    duty_info = duty_schedule[tomorrow_day]
+                    message += "Дежурные на завтра:\n"
+                    for time_slot, people in duty_info.items():
+                        message += f"{time_slot}: {', '.join(people)}\n"
+                else:
+                    message += "Дежурные на завтра: Не указано\n"
+
+                # Получаем ответственных за уборку на заданную дату и добавляем их в сообщение
+                cleaning_responsibles = get_cleaning_responsibles(tomorrow)
+                message += f"\n🧹 Ответственные за уборку на эту неделю: {', '.join(cleaning_responsibles)}\n"
+
+            # Отправляем сообщение в каждый чат
+            for chat_id in range(1, 3):  # Предположим, что у вас есть 100 чатов с номерами от 1 до 100
+                try:
+                    vk.messages.send(chat_id=chat_id, message=message, random_id=0)
+                except vk_api.exceptions.ApiError as e:
+                    print(f"Ошибка при отправке сообщения в чат {chat_id}: {e}")
+                time.sleep(1)  # Ожидание между отправкой сообщений, чтобы избежать блокировки
+
+        # После отправки сообщений ждем до следующего дня для повтора цикла
         time.sleep(60)  # Ожидание, чтобы избежать множественной отправки одного сообщения
+    else:
+        # Если время еще не достигнуто, ждем некоторое время и проверяем снова
+        time.sleep(60)

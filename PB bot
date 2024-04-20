@@ -110,7 +110,7 @@ while True:
     tomorrow_day = tomorrow.weekday()
 
     # Проверяем, достигнуто ли нужное время для отправки сообщения
-    if datetime.time(21, 11) < now.time() and now.time() < datetime.time(21, 12):
+    if datetime.time(20, 59) < now.time() and now.time() < datetime.time(21, 00):
         # Проверяем, что сегодня не суббота или воскресенье
         if tomorrow_day not in [5, 6]:
             message = f"Дата: {tomorrow.strftime('%d-%m-%Y')}\n"
